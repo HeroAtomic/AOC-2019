@@ -68,7 +68,7 @@ while result != solution:
     noun, verb = new_check()
     intcode, inst_pointer, par1_index, par2_index, replace_index = restart()
     result = fix_intcode(intcode, inst_pointer, par1_index, par2_index, replace_index)
-    print(result)
+    print('Result:{} Noun:{} Verb:{}'.format(result, noun, verb))
 
 print('\n')
 print('This code is bent, never use this as an example')
