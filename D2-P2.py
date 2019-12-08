@@ -73,5 +73,5 @@ while result != solution:
 print('\n')
 print('This code is bent, never use this as an example')
 print('We got the answer {}'.format(result))
-print("The noun is: {} and the verb is {}".format(noun, verb))
+print("The noun is: {} and the verb is: {}".format(noun, verb))
 print('The answer to the question 100*noun+verb is {}'.format(100*noun+verb))
