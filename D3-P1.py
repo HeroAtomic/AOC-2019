@@ -2,6 +2,9 @@
 # Me: Ok
 import csv
 from copy import deepcopy
+from datetime import datetime
+
+start_time = datetime.now()
 
 def import_list():
     with open ('wire1_input.txt', 'r') as file:
@@ -21,6 +24,7 @@ def import_list():
     return wire1, wire2
 
 def find_path(wire):
+
     wire_path = []
     wire_pos = [0, 0]
 
@@ -42,9 +46,9 @@ def find_path(wire):
 
     return wire_path
 
-def find_intersection():
+def find_full_path1():
 
-    print(wire1_path)
+    #print(wire1_path)
 
     current_positions = []
 
@@ -64,57 +68,30 @@ def find_intersection():
                     pos1[0] += 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-                    print(current_pos)
                 elif pos1[0] > pos2[0]:
                     pos1[0] -= 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-                    print(current_pos)
                 elif pos1[1] < pos2[1]:
                     pos1[1] += 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-                    print(current_pos)
                 elif pos1[1] > pos2[1]:
                     pos1[1] -= 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-
-                    print(current_pos)
 
             # check next positions
             i1 += 1
             i2 += 1
 
     except:
-        print('end')
+        print('Wire 1 path traced')
     return current_positions
 
-def find_path(wire):
-    wire_path = []
-    wire_pos = [0, 0]
+def find_full_path2():
 
-    for dir in wire:
-        if 'R' in dir:
-            wire_pos[0] += int(dir[1:])
-            wire_path.append(wire_pos[:])
-        elif 'L' in dir:
-            wire_pos[0] -= int(dir[1:])
-            wire_path.append(wire_pos[:])
-        elif 'U' in dir:
-            wire_pos[1] += int(dir[1:])
-            wire_path.append(wire_pos[:])
-        elif 'D' in dir:
-            wire_pos[1] -= int(dir[1:])
-            wire_path.append(wire_pos[:])
-        else:
-            print("Something is wrong")
-
-    return wire_path
-
-def find_intersection2():
-
-    print(wire1_path)
+    #print(wire1_path)
 
     current_positions = []
 
@@ -134,49 +111,68 @@ def find_intersection2():
                     pos1[0] += 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-                    print(current_pos)
                 elif pos1[0] > pos2[0]:
                     pos1[0] -= 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-                    print(current_pos)
                 elif pos1[1] < pos2[1]:
                     pos1[1] += 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-                    print(current_pos)
                 elif pos1[1] > pos2[1]:
                     pos1[1] -= 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-
-                    print(current_pos)
 
             # check next positions
             i1 += 1
             i2 += 1
 
     except:
-        print('end')
+        print('Wire 2 path traced')
     return current_positions
 
+def find_intersections():
+    intersections = []
+
+    for i in w1:
+        if i in w2:
+            print('Intersection found at:', i)
+            intersections.append(i)
+    return intersections
+
+def find_manhattan():
+    distances = []
+
+    for i in intersections:
+        dist = abs(i[0]) + abs(i[1])
+        distances.append(dist)
+
+    distances.sort()
+    return distances[0]
 
 
 wire1, wire2 = import_list()
 
+#wire1 = ['R8', 'U5', 'L5', 'D3']
+#wire2 = ['U7', 'R6', 'D4', 'L4']
+
 #find the path of each and put it in a list
+print('Finding path')
 wire1_path = find_path(wire1)
 wire2_path = find_path(wire2)
 
-print('Path:', wire1_path)
-#print(wire2_path)
+print('Tracing wires')
+w1 = find_full_path1()
+w2 = find_full_path2()
 
-w1 = find_intersection()
-w2 = find_intersection2()
+print('Getting intersection points:')
+intersections = find_intersections()
+shortest_distance = find_manhattan()
 
-print('Wire 1:', w1)
-print('Wire 2:', w2)
-
-for i in w1:
-    if i in w2:
-        print('Intersection:', i)
+print('\n')
+print('Shortest path found!!')
+print('The shortest distance to the intersection point is: {}', shortest_distance)
+end_time = datetime.now()
+print('Start time:'.format(start_time))
+print('End time:'.format(end_time))
