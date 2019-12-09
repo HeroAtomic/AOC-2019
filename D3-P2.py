@@ -6,24 +6,19 @@ from datetime import datetime
 
 start_time = datetime.now()
 
-def import_list():
-    with open ('wire1_input_test.txt', 'r') as file:
-        wire1 = []
+def import_list(filename):
+    with open (filename, 'r') as file:
+        wire = []
         reader = csv.reader(file)
         for row in reader:
-            wire1.append(row)
-        wire1 = wire1[0]
-
-    with open ('wire2_input_test.txt', 'r') as file:
-        wire2 = []
-        reader = csv.reader(file)
-        for row in reader:
-            wire2.append(row)
-        wire2 = wire2[0]
+            wire.append(row)
+        wire = wire[0]
+    return wire
+    print(wire)
 
     return wire1, wire2
 
-def find_path(wire):
+def find_position(wire):
 
     wire_path = []
     wire_pos = [0, 0]
@@ -46,152 +41,119 @@ def find_path(wire):
 
     return wire_path
 
-def find_full_path1():
-    steps = 0
-
-    #print(wire1_path)
-
+def find_full_path(wire):
     current_positions = []
-    wire1_steps = []
 
+    wire_path = wire
     i1 = 0
     i2 = 1
     try:
         # write every position from pos2 in path to pos 1
-        for position in wire1_path:
+        for position in wire_path:
 
-            pos1 = list(wire1_path[i1])
-            pos2 = list(wire1_path[i2])
+            pos1 = list(wire_path[i1])
+            pos2 = list(wire_path[i2])
+
 
             #R or L
             while pos1 != pos2:
-
                 if pos1[0] < pos2[0]:
                     pos1[0] += 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-                    steps += 1
                 elif pos1[0] > pos2[0]:
                     pos1[0] -= 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-                    steps += 1
                 elif pos1[1] < pos2[1]:
                     pos1[1] += 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-                    steps += 1
                 elif pos1[1] > pos2[1]:
                     pos1[1] -= 1
                     current_pos = pos1[:]
                     current_positions.append(current_pos)
-                    steps += 1
-            # if pos1 == pos2:
-            #     print('steps', steps)
-            #     wire1_steps.append(steps)
-            #     steps = 0
-            # # check next positions
-            # i1 += 1
-            # i2 += 1
+
+            # check next positions
+            i1 += 1
+            i2 += 1
 
     except:
         print('Wire 1 path traced')
     return current_positions
 
-def find_full_path2():
-    steps = 0
-    #print(wire1_path)
-
-    current_positions = []
-    wire2_steps = []
-
-    i1 = 0
-    i2 = 1
-    try:
-        # write every position from pos2 in path to pos 1
-        for position in wire2_path:
-
-            pos1 = list(wire2_path[i1])
-            pos2 = list(wire2_path[i2])
-
-
-            #R or L
-            while pos1 != pos2:
-                if pos1[0] < pos2[0]:
-                    pos1[0] += 1
-                    current_pos = pos1[:]
-                    current_positions.append(current_pos)
-                    steps += 1
-                elif pos1[0] > pos2[0]:
-                    pos1[0] -= 1
-                    current_pos = pos1[:]
-                    current_positions.append(current_pos)
-                    steps += 1
-                elif pos1[1] < pos2[1]:
-                    pos1[1] += 1
-                    current_pos = pos1[:]
-                    current_positions.append(current_pos)
-                    steps += 1
-                elif pos1[1] > pos2[1]:
-                    pos1[1] -= 1
-                    current_pos = pos1[:]
-                    current_positions.append(current_pos)
-                    steps += 1
-
-            # if pos1 == pos2:
-            #     print('steps', steps)
-            #     wire2_steps.append(steps)
-            #     steps = 0
-            # # check next positions
-            # i1 += 1
-            # i2 += 1
-
-    except:
-        print('Wire 2 path traced')
-    return current_positions
-
 def find_intersections():
     intersections = []
+    total_steps_list = []
+
+    print(w1)
+    print(w2)
 
     for i in w1:
         if i in w2:
             print('Intersection found at:', i)
+
+            w1_steps = w1.index(i) + 1
+            w2_steps = w2.index(i) + 1
+
+            # find the steps
+            print('w1 steps:', w1_steps)
+            print('w2 steps:', w2_steps)
+
+            # Total_steps for checking
+            total_steps = w1_steps + w2_steps
+            total_steps_list.append(total_steps)
             intersections.append(i)
-    return intersections
+    return intersections, total_steps_list
 
 def find_manhattan():
     distances = []
 
     for i in intersections:
-        print(i)
         dist = abs(i[0]) + abs(i[1])
         distances.append(dist)
 
-    distances.sort()
-    return distances[0]
+    #distances.sort()
+    return distances[1]
 
 
-wire1, wire2 = import_list()
+wire1 = import_list('wire1_input_test.txt')
+wire2 = import_list('wire2_input_test.txt')
 
-#wire1 = ['R8', 'U5', 'L5', 'D3']
-#wire2 = ['U7', 'R6', 'D4', 'L4']
+wire1 = ['R8', 'U5', 'L5', 'D3']
+wire2 = ['U7', 'R6', 'D4', 'L4']
 
-#find the path of each and put it in a list
+# find the turning point of each wire
 print('Finding path')
-wire1_path = find_path(wire1)
-wire2_path = find_path(wire2)
+wire1_pos = find_position(wire1)
+#wire1_pos.insert(0, [0, 0])
+#print('wire1 pos', wire1_pos)
 
+wire2_pos = find_position(wire2)
+#wire2_pos.insert(0, [0, 0])
+#print('wire2 pos', wire2_pos)
+
+
+# Find the full path with every grid point
 print('Tracing wires')
-w1 = find_full_path1()
-w2 = find_full_path2()
+w1 = find_full_path(wire1_pos)
+w2 = find_full_path(wire2_pos)
 
+# Get the intersection points
 print('Getting intersection points:')
-intersections = find_intersections()
+intersections, total_steps = find_intersections()
+
+# Get the manhattan distance (the sum of the absolute values)
 shortest_distance = find_manhattan()
 
 print('\n')
 print('Shortest path found!!')
 print('The shortest distance to the intersection point is: {}'.format(shortest_distance))
+print('The shortest number of grid steps is: {}'.format(total_steps[0]))
+print(total_steps)
+
 end_time = datetime.now()
-print('Start time: {}'.format(start_time))
-print('End time: {}'.format(end_time))
+
+
+# print('Start time: {}'.format(start_time))
+# print('End time: {}'.format(end_time))
