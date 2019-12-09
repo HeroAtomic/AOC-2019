@@ -6,20 +6,14 @@ from datetime import datetime
 
 start_time = datetime.now()
 
-def import_list():
-    with open ('wire1_input.txt', 'r') as file:
-        wire1 = []
+def import_list(filename):
+    with open (filename, 'r') as file:
+        wire = []
         reader = csv.reader(file)
         for row in reader:
-            wire1.append(row)
-        wire1 = wire1[0]
-
-    with open ('wire2_input.txt', 'r') as file:
-        wire2 = []
-        reader = csv.reader(file)
-        for row in reader:
-            wire2.append(row)
-        wire2 = wire2[0]
+            wire.append(row)
+        wire = wire[0]
+    return wire
 
     return wire1, wire2
 
@@ -46,20 +40,18 @@ def find_path(wire):
 
     return wire_path
 
-def find_full_path1():
-
-    #print(wire1_path)
-
+def find_full_path(wire):
     current_positions = []
 
+    wire_path = wire
     i1 = 0
     i2 = 1
     try:
         # write every position from pos2 in path to pos 1
-        for position in wire1_path:
+        for position in wire_path:
 
-            pos1 = list(wire1_path[i1])
-            pos2 = list(wire1_path[i2])
+            pos1 = list(wire_path[i1])
+            pos2 = list(wire_path[i2])
 
 
             #R or L
@@ -89,49 +81,6 @@ def find_full_path1():
         print('Wire 1 path traced')
     return current_positions
 
-def find_full_path2():
-
-    #print(wire1_path)
-
-    current_positions = []
-
-    i1 = 0
-    i2 = 1
-    try:
-        # write every position from pos2 in path to pos 1
-        for position in wire2_path:
-
-            pos1 = list(wire2_path[i1])
-            pos2 = list(wire2_path[i2])
-
-
-            #R or L
-            while pos1 != pos2:
-                if pos1[0] < pos2[0]:
-                    pos1[0] += 1
-                    current_pos = pos1[:]
-                    current_positions.append(current_pos)
-                elif pos1[0] > pos2[0]:
-                    pos1[0] -= 1
-                    current_pos = pos1[:]
-                    current_positions.append(current_pos)
-                elif pos1[1] < pos2[1]:
-                    pos1[1] += 1
-                    current_pos = pos1[:]
-                    current_positions.append(current_pos)
-                elif pos1[1] > pos2[1]:
-                    pos1[1] -= 1
-                    current_pos = pos1[:]
-                    current_positions.append(current_pos)
-
-            # check next positions
-            i1 += 1
-            i2 += 1
-
-    except:
-        print('Wire 2 path traced')
-    return current_positions
-
 def find_intersections():
     intersections = []
 
@@ -151,23 +100,26 @@ def find_manhattan():
     distances.sort()
     return distances[0]
 
+wire1 = import_list('wire1_input_test.txt')
+wire2 = import_list('wire2_input_test.txt')
 
-wire1, wire2 = import_list()
+# wire1 = ['R8', 'U5', 'L5', 'D3']
+# wire2 = ['U7', 'R6', 'D4', 'L4']
 
-#wire1 = ['R8', 'U5', 'L5', 'D3']
-#wire2 = ['U7', 'R6', 'D4', 'L4']
-
-#find the path of each and put it in a list
+# find the turning point of each wire
 print('Finding path')
 wire1_path = find_path(wire1)
 wire2_path = find_path(wire2)
 
+# Find the full path with every grid point
 print('Tracing wires')
-w1 = find_full_path1()
-w2 = find_full_path2()
+w1 = find_full_path(wire1_path)
+w2 = find_full_path(wire2_path)
 
+# Get the intersection points
 print('Getting intersection points:')
 intersections = find_intersections()
+# Get the manhattan distance (the sum of the absolute values)
 shortest_distance = find_manhattan()
 
 print('\n')
